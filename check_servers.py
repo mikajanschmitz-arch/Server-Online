@@ -55,10 +55,28 @@ def check_server(host, port):
             timeout=15
         )
 
+        # ZUSÄTZLICHE TESTAUSGABE
+        print(
+            f"mcstatus.io HTTP-Status für {address}: "
+            f"{response.status_code}"
+        )
+
         if response.status_code != 200:
+
+            print(
+                f"mcstatus.io Antwort: "
+                f"{response.text}"
+            )
+
             return False, 0, []
 
         data = response.json()
+
+        # ZUSÄTZLICHE TESTAUSGABE
+        print(
+            f"mcstatus.io Antwort für {address}: "
+            f"{data}"
+        )
 
         online = bool(
             data.get("online", False)
