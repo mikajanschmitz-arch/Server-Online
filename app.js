@@ -524,15 +524,33 @@ async function enableNotifications() {
         }
 
 
+        // ==========================================
+        // SERVICE WORKER REGISTRIEREN
+        // ==========================================
+
         const registration =
-            await navigator.serviceWorker.ready;
+            await navigator.serviceWorker.register(
+                "./sw.js"
+            );
 
 
         console.log(
-            "3. Service Worker bereit:",
+            "3. Service Worker registriert:",
             registration
         );
 
+
+        await navigator.serviceWorker.ready;
+
+
+        console.log(
+            "Service Worker ist bereit."
+        );
+
+
+        // ==========================================
+        // VAPID KEY LADEN
+        // ==========================================
 
         const publicKey =
             await getPublicVapidKey();
@@ -542,6 +560,10 @@ async function enableNotifications() {
             "4. VAPID-Key erhalten."
         );
 
+
+        // ==========================================
+        // VORHANDENE SUBSCRIPTION PRÜFEN
+        // ==========================================
 
         let subscription =
             await registration
@@ -554,6 +576,10 @@ async function enableNotifications() {
             subscription
         );
 
+
+        // ==========================================
+        // NEUE SUBSCRIPTION ERSTELLEN
+        // ==========================================
 
         if (!subscription) {
 
@@ -585,6 +611,10 @@ async function enableNotifications() {
 
         }
 
+
+        // ==========================================
+        // SUBSCRIPTION AN CLOUDFLARE SENDEN
+        // ==========================================
 
         const response =
             await fetch(
