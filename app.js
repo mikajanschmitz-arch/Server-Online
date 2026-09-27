@@ -476,6 +476,11 @@ async function enableNotifications() {
 
     try {
 
+        console.log(
+            "1. Benachrichtigungen werden gestartet..."
+        );
+
+
         if (
             !("serviceWorker" in navigator)
         ) {
@@ -502,6 +507,12 @@ async function enableNotifications() {
             await Notification.requestPermission();
 
 
+        console.log(
+            "2. Berechtigung:",
+            permission
+        );
+
+
         if (
             permission !== "granted"
         ) {
@@ -514,13 +525,22 @@ async function enableNotifications() {
 
 
         const registration =
-            await navigator.serviceWorker.register(
-                "sw.js"
-            );
+            await navigator.serviceWorker.ready;
+
+
+        console.log(
+            "3. Service Worker bereit:",
+            registration
+        );
 
 
         const publicKey =
             await getPublicVapidKey();
+
+
+        console.log(
+            "4. VAPID-Key erhalten."
+        );
 
 
         let subscription =
@@ -529,7 +549,18 @@ async function enableNotifications() {
                 .getSubscription();
 
 
+        console.log(
+            "5. Vorhandene Subscription:",
+            subscription
+        );
+
+
         if (!subscription) {
+
+            console.log(
+                "6. Erstelle neue Push-Subscription..."
+            );
+
 
             subscription =
                 await registration
@@ -545,6 +576,12 @@ async function enableNotifications() {
                             )
 
                     });
+
+
+            console.log(
+                "7. Subscription erstellt:",
+                subscription
+            );
 
         }
 
@@ -566,6 +603,12 @@ async function enableNotifications() {
                         )
                 }
             );
+
+
+        console.log(
+            "8. Subscription an Cloudflare gesendet:",
+            response.status
+        );
 
 
         if (!response.ok) {
@@ -592,7 +635,10 @@ async function enableNotifications() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "BENACHRICHTIGUNGS-FEHLER:",
+            error
+        );
 
 
         showMessage(
